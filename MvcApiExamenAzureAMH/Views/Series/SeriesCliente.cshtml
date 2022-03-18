@@ -1,0 +1,108 @@
+﻿<h1>Series cliente</h1>
+
+@section Scripts{
+    <script>
+        var urlApi = "https://apiexamenamh.azurewebsites.net/";
+        $(document).ready(function () {
+            cargarSeries();
+
+            $("#botoninsert").click(function () {
+                var nombre = $("#cajanombre").val();
+                var imagen = $("#cajaimagen").val();
+                var puntuacion = $("#cajapuntuacion").val();
+                var año = $("#cajaaño").val();
+                var serie = new Object();
+                serie.idSerie = 0;
+                serie.nombre = nombre;
+                serie.imagen = imagen;
+                serie.puntuacion = puntuacion;
+                serie.año = año;
+                var json = JSON.stringify(serie);
+                var request = "/api/Series";
+                $.ajax({
+                    url: urlApi + request,
+                    type: "POST",
+                    data: json,
+                    contentType: "application/json",
+                    success: function () {
+                        cargarSeries();
+                    }
+                });
+            });
+
+            $("#botondelete").click(function () {
+                var id = $("#cajanumero").val();
+                var request = "/api/series/" + id;
+                $.ajax({
+                    url: urlApi + request,
+                    type: "DELETE",
+                    success: function () {
+                        cargarSeries();
+                    }
+                });
+            });
+
+        });
+
+        function cargarSeries() {
+            var request = "/api/Series";
+            $.ajax({
+                url: urlApi + request,
+                method: "GET",
+                dataType: "json",
+                success: function (data) {
+                    var html = "";
+                    $.each(data, function (index, serie) {
+                        html += "<tr>"
+                        html += "<td>" + serie.idSerie + "</td>";
+                        html += "<td>" + serie.nombre + "</td>";
+                        html += "<td><img src='" + serie.imagen + "' style='width:150px;height:150px'/></td>";
+                        html += "<td>" + serie.puntuacion + "</td>";
+                        html += "<td>" + serie.año + "</td>";
+                        html += "</tr>"
+                    });
+                    $("#tablaSeries tbody").html(html);
+                }
+            })
+        }
+    </script>
+}
+
+<label>Nombre:</label>
+<input type="text" id="cajanombre" class="form-control" />
+<br />
+
+<label>Imagen:</label>
+<input type="text" id="cajaimagen" class="form-control" />
+<br />
+
+<label>Puntuacion:</label>
+<input type="text" id="cajapuntuacion" class="form-control" />
+<br />
+
+<label>Año:</label>
+<input type="text" id="cajaaño" class="form-control" />
+<br />
+
+<button id="botoninsert" class="btn btn-success">Insert</button>
+<br />
+
+<label>Inserte el id de la serie a eliminar:</label>
+<input type="text" id="cajanumero" class="form-control" />
+<br />
+
+<button id="botondelete" class="btn btn-danger">Delete</button>
+<br />
+
+<table class="table table-warning" id="tablaSeries">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Imagen</th>
+            <th>Puntuacion</th>
+            <th>Año</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>

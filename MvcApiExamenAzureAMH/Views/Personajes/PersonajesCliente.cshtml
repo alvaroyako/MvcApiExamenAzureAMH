@@ -1,0 +1,50 @@
+﻿<h1>Personajes Cliente</h1>
+
+@section Scripts{
+    <script>
+        var urlApi = "https://apiexamenamh.azurewebsites.net/";
+        $(document).ready(function () {
+            $("#botonmostrar").click(function () {
+                var id = $("#cajanumero").val();
+                var request = "/api/Series/PersonajesSerie/" + id;
+                $.ajax({
+                    url: urlApi + request,
+                    method: "GET",
+                    dataType: "json",
+                    success: function (data) {
+                        var html = "";
+                        $.each(data, function (index, pj) {
+                            html += "<tr>"
+                            html += "<td>" + pj.idPersonaje + "</td>";
+                            html += "<td>" + pj.nombre + "</td>";
+                            html += "<td><img src='" + pj.imagen + "' style='width:150px;height:150px'/></td>";
+                            html += "<td>" + pj.idSerie + "</td>";
+                            html += "</tr>"
+                        });
+                        $("#tablaPersonajes tbody").html(html);
+                    }
+                })
+
+
+            });
+
+        });
+
+    </script>
+}
+<label>Inserte la id de la serie: </label>
+<input type="text" id="cajanumero" class="form-control" />
+<br />
+<button id="botonmostrar" class="btn btn-success">Mostrar</button>
+<br />
+<table class="table table-dark" id="tablaPersonajes">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Imagen</th>
+            <th>Id Serie</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
